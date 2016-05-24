@@ -1,6 +1,8 @@
 #include <SPI.h>
 #include "PID/point.h"
 #include "Wheels/wheels.h"
+#include "CarProjCommon/CarProjCommon.h"
+#include "CommunicationFuncs/CommunicationFuncs.h"
 #include "CarCommunication/CarCommunication.h"
 
 CarCommunication CarCom;

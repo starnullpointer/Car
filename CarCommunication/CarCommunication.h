@@ -1,9 +1,8 @@
 #ifndef CARCOMMUNICATION
 #define CARCOMMUNICATION
-#include "../CommunicationFuncs/CommunicationFuncs.h"
+#include "../CarProjCommon/CarProjCommon.h"
 #include "../PID/point.h"
-#include "../constants.h"
-#include "../messageblock/packet.h"
+#include "../CommunicationFuncs/CommunicationFuncs.h"
 #include <Adafruit_WINC1500Client.h>
 
 
