@@ -2,12 +2,14 @@
 
 CarCommunication::CarCommunication()
 {
-    
+
 }
 
 void CarCommunication::Init()
 {
     Setup_Wifi_and_Server(client);
+    currentDest.SetX(900);
+    currentDest.SetY(600);
 }
 
 Point CarCommunication::getCurrentPos()
@@ -18,6 +20,11 @@ Point CarCommunication::getCurrentPos()
 Point CarCommunication::getDest()
 {
     return currentDest;
+}
+
+Point CarCommunication::getPrevPos()
+{
+    return prevPos;
 }
 
 CommunicationStatus CarCommunication::UpdatePosAndDest()
@@ -38,6 +45,7 @@ CommunicationStatus CarCommunication::UpdatePosAndDest()
                 if(ReachedDest()) {
                     Serial.println("Destination Reached");
                     status=UpdateDest(); //get new dest if reaced old dest     
+                    status=ComError;
                 }
                 else {
                     Serial.println("Havn't arrived yet.");
@@ -62,6 +70,7 @@ CommunicationStatus CarCommunication::UpdateDest()
         WaitForUpdate(client);
         Packet p = GetMessage(client);
         if(strCmp(p.Command, COMM_YOUR_DEST)){
+            Serial.print("new Destination: ");Serial.print(p.Other[0]);Serial.print(p.Other[1]);
             currentDest.SetX(atoi(p.Other[0]));
             currentDest.SetY(atoi(p.Other[1]));
         }

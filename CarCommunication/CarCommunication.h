@@ -14,6 +14,7 @@ public:
 	void Init();
 	Point getCurrentPos();
 	Point getDest();
+	Point getPrevPos();
 
 	CommunicationStatus UpdatePosAndDest();
 	CommunicationStatus UpdateDest();
@@ -30,7 +31,6 @@ private:
 	CommunicationStatus CheckConnectionsStatus();
 	CommunicationStatus LightIsOn();
 	bool ReachedDest();
-
 };
 
 #endif // CARCOMMUNICATION
