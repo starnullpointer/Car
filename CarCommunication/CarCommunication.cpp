@@ -88,7 +88,7 @@ CommunicationStatus CarCommunication::UpdateDest()
     return status;
 }
 
-CommunicationStatus CarCommunication::UpadateCmd()
+CommunicationStatus CarCommunication::UpdateCmd()
 {
     CommunicationStatus status=CheckConnectionsStatus();
     if(status==ComSucess){

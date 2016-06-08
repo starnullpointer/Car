@@ -44,6 +44,8 @@ private:
 	double time;
 	double multipler;
 	double carLength;
+
+	int mode = 1;
 };
 
 #endif // GAME
