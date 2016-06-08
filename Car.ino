@@ -1,6 +1,8 @@
 #include <SPI.h>
 #include "Game/game.h"
 Game car;
+//0 Auto, 1 Manual
+int mode = 1;
 
 void setup()
 {

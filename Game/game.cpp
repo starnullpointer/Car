@@ -65,32 +65,47 @@ void Game::Update()
     if (com_status == ComSucess){
         //  move car
         UpdateDataFromCommunication();  //update currentPos, previousPos,destPos
-        if(currentPos.GetX()==1023 || currentPos.GetY()==1023){
-            Stop_Car();
+        if(mode==0){
+            //Auto Mode
+            if(currentPos.GetX()==1023 || currentPos.GetY()==1023){
+                Stop_Car();
+            }
+            else{
+                //calling PID stuff: passing errorVelocity,carlength,currentPos
+                Serial.println("**********************************");
+                Point errorVelocity = destPos - currentPos;
+                Serial.print("currentPos: (");Serial.print(currentPos.GetX());
+                Serial.print(",");Serial.print(currentPos.GetY());Serial.println(")");
+                Serial.print("destPos: (");Serial.print(destPos.GetX());
+                Serial.print(",");Serial.print(destPos.GetY());Serial.println(")");
+                Serial.print("errorVelocity: (");Serial.print(errorVelocity.GetX());
+                Serial.print(",");Serial.print(errorVelocity.GetY());Serial.println(")");
+                PID p_i_d(errorVelocity,carLength,currentPos);
+                double ratio = p_i_d.GetRatioVelocity();            
+                Serial.print("ratio: ");Serial.println(ratio);
+                //based on the pid ratio to move the car
+                double leftSpeed = ratio * multipler;
+                double rightSpeed = multipler;
+                Serial.print("leftSpeed: ");Serial.println(leftSpeed);
+                Serial.print("rightSpeed: ");Serial.println(rightSpeed);
+                Move(leftSpeed,rightSpeed); //move the car based on PID ratio
+                Serial.println("**********************************");
+            }
         }
         else{
-            //calling PID stuff: passing errorVelocity,carlength,currentPos
-            Serial.println("**********************************");
-            Point errorVelocity = destPos - currentPos;
-            Serial.print("currentPos: (");Serial.print(currentPos.GetX());
-            Serial.print(",");Serial.print(currentPos.GetY());Serial.println(")");
-            Serial.print("destPos: (");Serial.print(destPos.GetX());
-            Serial.print(",");Serial.print(destPos.GetY());Serial.println(")");
-            Serial.print("errorVelocity: (");Serial.print(errorVelocity.GetX());
-            Serial.print(",");Serial.print(errorVelocity.GetY());Serial.println(")");
-            PID p_i_d(errorVelocity,carLength,currentPos);
-            double ratio = p_i_d.GetRatioVelocity();            
-            Serial.print("ratio: ");Serial.println(ratio);
-            //based on the pid ratio to move the car
-            double leftSpeed = ratio * multipler;
-            double rightSpeed = multipler;
-            Serial.print("leftSpeed: ");Serial.println(leftSpeed);
-            Serial.print("rightSpeed: ");Serial.println(rightSpeed);
-            Move(leftSpeed,rightSpeed); //move the car based on PID ratio
-            Serial.println("**********************************");
+            //Manual Mode
+            com_status = CarCom.UpdateCmd();
+            if(com_status == ComSucess){
+                int leftSpeed = CarCom.getCmdLeft();
+                int rightSpeed = CarCom.getCmdRight();
+                Move(leftSpeed,rightSpeed);
+            }
+            else{
+                Stop_Car();
+            }
         }
     }
-    else if (com_status == ComWifiDisconnect){
+    if (com_status == ComWifiDisconnect){
         // stop car...
         Stop_Car();
         // reconnect to wifi & server

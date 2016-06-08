@@ -27,6 +27,16 @@ Point CarCommunication::getPrevPos()
     return prevPos;
 }
 
+int CarCommunication::getCmdLeft()
+{
+    return cmdLeft;
+}
+
+int CarCommunication::getCmdRight()
+{
+    return cmdRight;
+}
+
 CommunicationStatus CarCommunication::UpdatePosAndDest()
 {
     CommunicationStatus status=CheckConnectionsStatus();
@@ -73,6 +83,27 @@ CommunicationStatus CarCommunication::UpdateDest()
             Serial.print("new Destination: ");Serial.print(p.Other[0]);Serial.print(p.Other[1]);
             currentDest.SetX(atoi(p.Other[0]));
             currentDest.SetY(atoi(p.Other[1]));
+        }
+    }
+    return status;
+}
+
+CommunicationStatus CarCommunication::UpadateCmd()
+{
+    CommunicationStatus status=CheckConnectionsStatus();
+    if(status==ComSucess){
+        Send(CAR_CON_REQ_CMD,client);
+        WaitForUpdate(client);
+        Packet p=GetMessage(client);
+
+        if(strCmp(p.Command,COMM_YOUR_CMD)){
+            cmdLeft = atoi(p.Other[0]);
+            cmdRight = atoi(p.Other[1]);
+            return status;
+        }
+        else {
+            Serial.print("Incorrect Message: "); Serial.println(p.Message);
+            return ComError;
         }
     }
     return status;

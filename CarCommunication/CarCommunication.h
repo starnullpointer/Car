@@ -15,9 +15,12 @@ public:
 	Point getCurrentPos();
 	Point getDest();
 	Point getPrevPos();
+	int getCmdLeft();
+	int getCmdRight();
 
 	CommunicationStatus UpdatePosAndDest();
 	CommunicationStatus UpdateDest();
+	CommunicationStatus UpdateCmd();
 
 	CommunicationStatus ReconnectWifi();
 	CommunicationStatus ReconnectServer();
@@ -27,6 +30,9 @@ private:
 	Point prevPos;
 	Point currentDest;
 	Adafruit_WINC1500Client client;
+
+	int cmdLeft;
+	int cmdRight;
 
 	CommunicationStatus CheckConnectionsStatus();
 	CommunicationStatus LightIsOn();
